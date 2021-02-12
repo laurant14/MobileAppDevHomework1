@@ -16,9 +16,18 @@ const routes: Routes = [
         loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
       },
       {
-        path: 'tab3',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        path: 'add-product-page',
+        loadChildren: () => import('../add-product-page/add-product-page.module').then(m => m.AddProductPagePageModule)
       },
+      {
+        path: 'order-detail-page',
+        loadChildren: () => import('../order-detail-page/order-detail-page.module').then(m => m.OrderDetailPagePageModule)
+      },
+      {
+        path: 'product-detail-page',
+        loadChildren: () => import('../product-detail-page/product-detail-page.module').then(m => m.ProductDetailPagePageModule)
+      },
+      
       {
         path: '',
         redirectTo: '/tabs/tab1',

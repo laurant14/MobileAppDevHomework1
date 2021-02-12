@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>ProductDetailPage</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>Item: {{item.name}}</ion-item>
+  <ion-item>Price: ${{item.price}}</ion-item>
+  <ion-item>{{item.description}}</ion-item>
+
+  <ion-item>
+      <ion-label> How many in your order?</ion-label>
+  </ion-item>
+
+  <ion-item>
+      <ion-range min="1" max="100" step="1" pin='true'  [(ngModel)]="order.quantity" (ionChange)='change()'>
+            <ion-icon size="small" slot="start" name="sunny"></ion-icon>
+            <ion-icon slot="end" name="sunny"></ion-icon>
+          </ion-range>
+      <p>quantity : {{order.quantity}}</p>
+  </ion-item>
+      
+  <ion-item>
+      <ion-button (click)="orderme()">
+        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
+      </ion-button>
+      <!--<ion-button (submit)="orderme()" class="submit-btn" expand="block" type="submit" >Add to Order</ion-button>
+      <ion-button class="submit-btn" expand="block" type="submit" [disabled]="!add_item_form.valid">Add Item</ion-button>-->
+  </ion-item>
+
+</ion-content>

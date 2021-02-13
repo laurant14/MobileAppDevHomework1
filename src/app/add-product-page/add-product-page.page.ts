@@ -21,8 +21,11 @@ export class AddProductPagePage implements OnInit {
 
   ngOnInit() {
     this.add_item_form=this.formBuilder.group({
-      name: new FormControl('', Validators.required),
-      description: new FormControl('', Validators.required)
+      name: ['', Validators.required],
+      price: ['', Validators.required],
+      category: ['', Validators.required],
+      url: ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
 
@@ -30,7 +33,7 @@ export class AddProductPagePage implements OnInit {
     console.log(value.name)
     console.log(value.description)
 
-    this.itemService.createItem(value.name,value.price,value.quantity,value.src);
+    this.itemService.createItem(value.name,value.price,value.url,value.description);
     this.goBack();
   }
 

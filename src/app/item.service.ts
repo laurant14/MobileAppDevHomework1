@@ -1,4 +1,11 @@
 import { Injectable } from '@angular/core';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestore} from '@angular/fire/firestore';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import {IonicStorageModule} from '@ionic/storage';
+import {Storage} from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +25,29 @@ orderList=[
 ]
 
 
-  constructor() { }
+  constructor(
+    private storage: Storage,
+    public firebase: AngularFirestore) { }
 
 
   createItem(name, price, url, description){
     this.menuList.push({name, price, url, description});
+    this.storage.set('menuList', JSON.stringify(this.menuList));
+
+    var db=this.firebase;
+
+    db.collection("menus").add({
+      name:name,
+      price: price,
+      url: url,
+      description: description,
+    })
+    .then((docRef)=>{
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error)=>{
+      console.error("Error adding document: ", error);
+    });
   }
 
   getOrderList(){

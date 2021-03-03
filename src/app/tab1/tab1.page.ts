@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {ItemService} from '../item.service';
+import {Observable} from 'rxjs';
+//import {FirebaseService} from '../services/firebase.service';
+import {Menu} from 'Menu';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit{
   menuList=[];
+  private menu: Observable<Menu[]>;
 
   
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     public itemService:ItemService) {
-      this.menuList=this.itemService.getItem();
+      this.menu=this.itemService.getMenus();
+    }
+
+    ngOnInit(): void{
+      this.menu=this.itemService.getMenus();
     }
 
   clickedSearch(){

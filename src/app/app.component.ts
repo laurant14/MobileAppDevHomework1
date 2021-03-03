@@ -20,20 +20,6 @@ export class AppComponent {
   initializeApp(){
     this.platform.ready().then(()=>{
 
-
-      // var db=this.firebase;
-
-      // db.collection("menus").add({
-      //   text:"Panda Fried Rice",
-      //   description: "too yummy",
-      //   price: 75.14
-      // })
-      // .then((docRef)=>{
-      //   console.log("Document written with ID: ", docRef.id);
-      // })
-      // .catch((error)=>{
-      //   console.error("Error adding document: ", error);
-      // });
     })
   }
 

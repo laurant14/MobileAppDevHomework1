@@ -21,6 +21,10 @@ export class OrderDetailPagePage implements OnInit {
     })
   }
 
+  deleteOrder(){
+    this.itemService.deleteOrder(this.order.id);
+  }
+
   
 
 }

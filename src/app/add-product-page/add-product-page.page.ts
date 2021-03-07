@@ -11,6 +11,7 @@ import { ItemService } from '../item.service';
 export class AddProductPagePage implements OnInit {
   
   add_item_form: FormGroup;
+  
 
 
   constructor(

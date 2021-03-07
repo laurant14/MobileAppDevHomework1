@@ -8,6 +8,11 @@
 
 Want to order something?
 
+<ion-item>
+  <ion-button slot="start" *ngIf="!hideMe" (click)="logout()">Logout</ion-button>
+  <ion-button slot="end" *ngIf="hideMe" (click)="signIn()" >Signin</ion-button>
+</ion-item>
+
 <ion-fab vertical="top" horizontal="end" slot="fixed">
   <ion-fab-button (click)="openAddProductPage()">
     <ion-icon name="add"></ion-icon>

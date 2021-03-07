@@ -9,9 +9,14 @@
 
 <ion-content>
 
+  <ion-item>
+    <ion-button slot="end" color="danger" (click)="deleteOrder(item.id)" >Delete</ion-button>
+  </ion-item>
+
     <ion-item>OrderId: {{order.id}}</ion-item>
+    <ion-item>Name: {{order.name}}</ion-item> 
     <ion-item>Quantity: {{order.quantity}}</ion-item>
-    <ion-item>Price: ${{order.amount}}</ion-item> 
+    <ion-item>Total: ${{order.amount}}</ion-item> 
     <ion-item>OrderDate: {{order.date}}</ion-item> 
 
 

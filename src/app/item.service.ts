@@ -7,8 +7,12 @@ import { AppComponent } from './app.component';
 import {IonicStorageModule} from '@ionic/storage';
 import {Storage} from '@ionic/storage';
 import {Menu} from 'Menu';
+import {Order} from 'Menu';
 import {Observable} from 'rxjs';
 import {map,take} from 'rxjs/operators';
+import {AngularFireAuth} from '@angular/fire/auth';
+import firebase from 'firebase/app';
+import { mainModule } from 'process';
 
 
 @Injectable({
@@ -17,6 +21,12 @@ import {map,take} from 'rxjs/operators';
 export class ItemService {
   private menu: Observable<Menu[]>;
   private menuCollection: AngularFirestoreCollection<Menu>;
+
+  private order: Observable<Order[]>;
+  private orderCollection: AngularFirestoreCollection<Order>;
+
+  usertype="";
+  uid='';
 
   menuList=[{name:"Pasta",price: 5.50,url:"https://www.budgetbytes.com/wp-content/uploads/2013/07/Creamy-Tomato-Spinach-Pasta-V2-bowl.jpg", description:""},
   {name:"Soup",price: 5.50,url:"https://www.inspiredtaste.net/wp-content/uploads/2018/10/Homemade-Vegetable-Soup-Recipe-4-1200.jpg",description:""},
@@ -31,7 +41,9 @@ orderList=[
 ]
 
 
-  constructor(private firebase: AngularFirestore) {
+  constructor(private firebase: AngularFirestore,
+    public angularFire: AngularFireAuth) {
+      this.orderCollection=this.firebase.collection<Order>('orders');
     this.menuCollection=this.firebase.collection<Menu>('menus');
     this.menu=this.menuCollection.snapshotChanges().pipe(
       map(actions=>{
@@ -43,8 +55,72 @@ orderList=[
         });
       })
     );
+
+    this.order=this.orderCollection.snapshotChanges().pipe(
+      map(actions=>{
+        return actions.map(a=>{
+          const data=a.payload.doc.data();
+          console.log("Data...");
+          console.log(data);
+          const id=a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
    }
 
+  //  load_my_orders(){
+  //    var user=firebase.auth().currentUser;
+  //    console.log(user.id);
+  //    var id=user.id;
+  //    this.orderCollection=this.firebase.collection<Order>('orders',ref=>ref.where('id', '==',id));
+  //    this.order=this.orderCollection.snapshotChanges().pipe(
+  //      map(actions=>{
+  //        return actions.map(a=>{
+  //          const data=a.payload.doc.data();
+  //          const id=a.payload.doc.id;
+  //          console.log(id)
+  //          return {id,...data};
+  //        });
+  //      })
+  //    );
+  //    console.log("orders loaded...");
+  //  }
+
+  load_my_orders(){ //after user login, call this function
+    var user = firebase.auth().currentUser;
+    console.log(user.uid);
+    var uid=user.uid;
+    // this.noteCollection = this.afs.collection<Note>('notes');
+    this.orderCollection = this.firebase.collection<Order>('orders',ref => ref.where('uid', '==', uid));
+
+    this.order = this.orderCollection.snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            const data = a.payload.doc.data();
+            // console.log(data)
+            const id = a.payload.doc.id;
+            console.log(id)
+            // console.log("run after aadding new node? ")
+            return { id, ...data };
+          });
+        })
+    );
+    console.log("orders  loaded...")
+  }
+
+  setUID(uid){
+    this.uid=uid;
+    console.log(this.uid);
+  }
+
+  setUsertype(type){
+    this.usertype=type;
+  }
+
+  getUsertype(){
+    return this.usertype;
+  }
 
   createItem(name, price, url, description){
     this.menuList.push({name, price, url, description});
@@ -66,22 +142,44 @@ orderList=[
     });
   }
 
-  getOrderList(){
-    return this.orderList;
-  }
+  // getOrderList(){
+  //   return this.orderList;
+  // }
 
   createOrder(item, quantityY){
-    console.log(item)
-    console.log(quantityY)
-    let orderid=Math.random()*(99999-10000)+10000;
+    //this.orderList.push({item, quantity});
+    var db=this.firebase;
     var d=new Date();
-    this.orderList.push({
-      id:orderid,
-      quantity:quantityY,
+
+    db.collection("orders").add({
+      name: item.name,
+      item: item,
+      quantity: quantityY,
       date: d.toLocaleDateString(),
-      amount:quantityY*item.price
+      amount:quantityY*item.price,
+    })
+    .then((docRef)=>{
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error)=>{
+      console.error("Error adding document: ", error);
+    // });
+    // console.log(item)
+    // console.log(quantityY)
+    // let orderid=Math.random()*(99999-10000)+10000;
+    // var d=new Date();
+    // this.orderList.push({
+    //   id:orderid,
+    //   quantity:quantityY,
+    //   date: d.toLocaleDateString(),
+    //   amount:quantityY*item.price
+    // });
     });
 
+}
+
+getOrder(): Observable<Order[]>{
+  return this.order;
 }
 
 getMenus(): Observable<Menu[]>{
@@ -97,8 +195,21 @@ getSingleMenu(id: string): Observable<Menu>{
     })
   );
 }
-deleteItem(id){
+
+updateProductInfo(menu: Menu): Promise<void>{
+  return this.menuCollection.doc(menu.id).update({name:menu.name,price:menu.price,url:menu.url,description:menu.description});
+}
+
+deleteItem(id: string){
+  return this.menuCollection.doc(id).delete();
 
 }
+
+deleteOrder(id: string){
+  return this.orderCollection.doc(id).delete();
 }
+
+
+}
+
 

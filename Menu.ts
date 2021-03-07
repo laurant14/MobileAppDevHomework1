@@ -3,6 +3,21 @@ export interface Menu{
     price: number;
     category: string;
     url: any;
-    desription: string;
+    description: string;
     id: string;
+}
+
+export interface Order{
+    id: any;
+    quantity: number;
+    date: any;
+    price: number;
+    uid: any;
+}
+
+export interface Cart{
+    id: any;
+    quantity: number;
+    date: any;
+    price: number;
 }

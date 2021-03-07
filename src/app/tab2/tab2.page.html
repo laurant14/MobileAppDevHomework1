@@ -15,13 +15,14 @@
   </ion-header>
 
   <ion-list>
-    <ion-item *ngFor="let item of orders" (click)="viewOrder(item)">
+    <ion-item *ngFor="let item of (order | async)" (click)="viewOrder(item)">
       <ion-thumbnail slot="start">
-        <ion-img [src]="orderimg"></ion-img>
+        <ion-img [src]=""></ion-img>
       </ion-thumbnail>
+      <!-- <ion-label>{{item.url}}</ion-label> -->
       <ion-label>{{item.id}}</ion-label>
-      <ion-label>${{item.amount}}</ion-label>
-      <ion-label>{{item.quantity}}</ion-label>
+      <ion-label>${{order.amount}}</ion-label>
+      <ion-label>{{quantity}}</ion-label>
   
     </ion-item>
   </ion-list>

@@ -127,12 +127,13 @@ orderList=[
    //this.storage.set('menuList', JSON.stringify(this.menuList));
 
     var db=this.firebase;
-
+    
     db.collection("menus").add({
       name:name,
       price: price,
       url: url,
       description: description,
+      
     })
     .then((docRef)=>{
       console.log("Document written with ID: ", docRef.id);
@@ -150,13 +151,17 @@ orderList=[
     //this.orderList.push({item, quantity});
     var db=this.firebase;
     var d=new Date();
-
+    var user = firebase.auth().currentUser;
+    console.log(user.uid);
+    var uid=user.uid;
     db.collection("orders").add({
       name: item.name,
       item: item,
       quantity: quantityY,
       date: d.toLocaleDateString(),
       amount:quantityY*item.price,
+      uid:uid,
+      //userid: this.angularFire.currentUser.uid,
     })
     .then((docRef)=>{
       console.log("Document written with ID: ", docRef.id);

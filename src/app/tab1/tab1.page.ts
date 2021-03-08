@@ -29,6 +29,10 @@ export class Tab1Page implements OnInit{
       this.menu=this.itemService.getMenus();
     }
 
+    ionViewWillLeave(){
+      console.log("will leave...homepage")
+    }
+    showme=false;
     ionViewWillEnter() {
       console.log("enter home...")
       console.log(this.itemService.uid)
@@ -39,6 +43,18 @@ export class Tab1Page implements OnInit{
         this.hideMe=false;
       }
       console.log(this.hideMe)
+
+     
+      console.log(this.itemService.usertype)
+      if(this.itemService.usertype == 'visitor' || this.itemService.usertype =='' ){
+         this.showme=false;
+       }
+       else{
+        this.showme=true;
+       }
+      console.log(this.showme)
+      
+        
     
   }
 
@@ -55,6 +71,8 @@ export class Tab1Page implements OnInit{
       console.log("logging off...");
       let user=this.angularFire.currentUser;
       console.log(user);
+      this.itemService.uid=''
+      this.hideMe=true;
       this.router.navigate(["/"]);//back to tab1
     })
   }

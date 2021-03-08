@@ -10,8 +10,8 @@
 <ion-content>
   
   <ion-item>
-    <ion-button slot="start" color="warning" *ngIf="isAdmin" [routerLink]="'/edit-product/' + item.id">Edit</ion-button>
-    <ion-button slot="end" color="danger" *ngIf="isAdmin" (click)="deleteItem()" >Delete</ion-button>
+    <ion-button slot="start" color="warning" *ngIf="showme" (click)="goToEditPage()">Edit</ion-button>
+    <ion-button slot="end" color="danger" *ngIf="showme" (click)="deleteItem()" >Delete</ion-button>
   </ion-item>
 
 

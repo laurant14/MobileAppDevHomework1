@@ -4,7 +4,7 @@ import {ItemService} from '../item.service';
 import {AlertController} from '@ionic/angular';
 import {ActivatedRoute, Router} from '@angular/router';
 //import {FirebaseService} from '../services/firebase.service';
-
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -16,9 +16,13 @@ export class ProductDetailPagePage implements OnInit {
   order={quantity:1}
 
   user:any;
+  isStoreOwner=false;
 
-
-  constructor(public itemService:ItemService,private route:ActivatedRoute, private router: Router,public alertController: AlertController) { }
+  constructor(public itemService:ItemService,
+    private route:ActivatedRoute, 
+    private router: Router,
+    public alertController: AlertController,
+    public afAuth: AngularFireAuth) { }
 
   ngOnInit() {
     console.log("OnInit product detail page");
@@ -28,7 +32,33 @@ export class ProductDetailPagePage implements OnInit {
         console.log(this.item)
       }
     )
+    this.afAuth.onAuthStateChanged(user => {
+      if (user) {
+        // logged in or user exists
+        console.log(user.email,user.uid);
+        this.user=user;
+      }
+      else {
+        // not logged in
+        this.user=""
+      }
+    })
   }
+  showme=false;
+  ionViewWillEnter() {
+    console.log("enter home...")
+    console.log(this.itemService.usertype)
+    if(this.itemService.usertype == 'visitor' || this.itemService.usertype =='' ){
+      this.showme=false;
+    }
+    else{
+      this.showme=true;
+    }
+    console.log(this.showme)
+  
+      }
+
+
    deleteItem(){
      this.presentAlertConfirm();
     //  this.itemService.deleteItem(this.item.id);
@@ -36,7 +66,7 @@ export class ProductDetailPagePage implements OnInit {
     //  this.router.navigateByUrl('/tab1/');
    }
   goToEditPage(){
-    this.router.navigate(['/edit-product']);
+    this.router.navigate(['tabs/edit-product']);
   }
 
   async presentAlertConfirm() {

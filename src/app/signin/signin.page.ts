@@ -14,7 +14,7 @@ import {ItemService} from '../item.service';
 })
 export class SigninPage implements OnInit {
 
-  user= {email:"laurantrombetta@gmail.com", password:"homework2"}
+  user= {email:"laurantrombetta@gmail.com", password:"mypassword"}
 
   constructor(public afAuth: AngularFireAuth, 
   	private itemService: ItemService,
@@ -53,7 +53,7 @@ signInWithEmail(email: string, password: string) {
           .catch(function(error) {
               console.log("Error getting documents: ", error);
           });
-        this.router.navigateByUrl('/');
+        this.router.navigate(['tabs/tab1']);
 
 
 	})
@@ -88,7 +88,7 @@ firebase.auth()
     console.log(user)
     self.itemService.setUID(user.uid);
     this.itemService.load_my_orders();
-    this.router.navigateByUrl('/');
+    this.router.navigate(['tabs/tab1']);
 
   }).catch((error) => {
     // Handle Errors here.
@@ -100,36 +100,6 @@ firebase.auth()
     var credential = error.credential;
     // ...
   });
-
-// firebase
-//   .auth()
-//   .signInWithPopup(provider)
-//   .then((result) => {
-//     /** @type {firebase.auth.OAuthCredential} */
-//     var credential = result.credential;
-
-//     // The signed-in user info.
-//     var user = result.user;
-//         console.log(user)
-//       this.router.navigateByUrl('/');
-
-
-//     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-//     // var accessToken = credential.accessToken;
-
-//     // ...
-//   })
-//   .catch((error) => {
-//     // Handle Errors here.
-//     var errorCode = error.code;
-//     var errorMessage = error.message;
-//     // The email of the user's account used.
-//     var email = error.email;
-//     // The firebase.auth.AuthCredential type that was used.
-//     var credential = error.credential;
-
-//     // ...
-//   });
 
 
   }
@@ -151,7 +121,7 @@ firebase.auth()
         self.itemService.setUID(user.uid);
         self.itemService.load_my_orders();
         self.itemService.setUsertype("visitor");
-      this.router.navigateByUrl('/');
+      this.router.navigate(['tabs/tab1']);
 
 
     // ...

@@ -15,6 +15,7 @@ export class Tab1Page implements OnInit{
   //menuList=[];
   private menu: Observable<Menu[]>;
   hideMe=true;
+  //item=null;
 
   
   constructor(

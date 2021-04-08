@@ -10,7 +10,8 @@
 <ion-content>
   
   <ion-item>
-    <ion-button slot="start" color="warning" *ngIf="showme" (click)="goToEditPage()">Edit</ion-button>
+    <!-- <ion-button slot="start" color="warning" [routerLink]="'/edit-product/'" *ngIf="showme" >Edit</ion-button> -->
+    <ion-button slot="start" color="warning" (click)="deleteAndAdd()" *ngIf="showme" >Edit</ion-button>
     <ion-button slot="end" color="danger" *ngIf="showme" (click)="deleteItem()" >Delete</ion-button>
   </ion-item>
 
@@ -36,9 +37,10 @@
   </ion-item>
       
   <ion-item>
-      <ion-button (click)="orderme()">
-        <ion-icon slot="icon-only" name="add-circle"></ion-icon>
-      </ion-button>
+      <ion-button expand="block" (click)="orderme()" >Add to Cart</ion-button>
+        <!-- <ion-icon slot="icon-only" name="add-circle"></ion-icon> -->
+        
+
       <!--<ion-button (submit)="orderme()" class="submit-btn" expand="block" type="submit" >Add to Order</ion-button>
       <ion-button class="submit-btn" expand="block" type="submit" [disabled]="!add_item_form.valid">Add Item</ion-button>-->
   </ion-item>

@@ -34,7 +34,7 @@ export class EditProductPage implements OnInit, AfterViewInit {
     }
   }
 
-  updateProduct(){
+  updateProduct(value){
     this.itemService.updateProductInfo(this.menu).then(()=>{
       this.router.navigateByUrl('/');
     },err=>{

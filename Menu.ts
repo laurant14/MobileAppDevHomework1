@@ -13,6 +13,7 @@ export interface Order{
     date: any;
     price: number;
     uid: any;
+    url: any;
 }
 
 export interface Cart{

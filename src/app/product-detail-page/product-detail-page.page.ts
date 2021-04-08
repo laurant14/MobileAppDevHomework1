@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 //import { ActivatedRoute } from '@angular/router';
 import {ItemService} from '../item.service';
+//import {AddProductPagePage} from '../add-product-page';
 import {AlertController} from '@ionic/angular';
 import {ActivatedRoute, Router} from '@angular/router';
 //import {FirebaseService} from '../services/firebase.service';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AddProductPagePageModule } from '../add-product-page/add-product-page.module';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -14,9 +16,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class ProductDetailPagePage implements OnInit {
   item=null
   order={quantity:1}
+  
 
   user:any;
-  isStoreOwner=false;
 
   constructor(public itemService:ItemService,
     private route:ActivatedRoute, 
@@ -56,9 +58,20 @@ export class ProductDetailPagePage implements OnInit {
     }
     console.log(this.showme)
   
-      }
+    }
+    openAddProductPage(){
+      console.log( "clicked me");
+      this.router.navigate(["/add-product-page"]);
+    }
 
 
+
+    deleteAndAdd(){
+      this.itemService.deleteItem(this.item.id);
+      //this.addPage.isFromEdit(true);
+      this.openAddProductPage();
+      //add fill variable
+    }
    deleteItem(){
      this.presentAlertConfirm();
     //  this.itemService.deleteItem(this.item.id);
@@ -102,7 +115,7 @@ export class ProductDetailPagePage implements OnInit {
   }
 
   orderme(){
-    if(this.user==null){
+    if(this.user.id==null){
       console.log("You must login to create an order")
       this.router.navigate(["/signin"])
       return;

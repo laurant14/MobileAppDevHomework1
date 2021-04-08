@@ -32,6 +32,11 @@
     <ion-item>
       <ion-label color="primary" position="floating">URL</ion-label>
       <ion-input type="url" formControlName="url" required></ion-input>
+      <ion-fab small clear slot="end">
+        <ion-fab-button (click)="pickImage()" item-end>
+          <ion-icon name="camera"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </ion-item>
     <ion-item>
       <ion-label color="primary" position="floating">Description</ion-label>

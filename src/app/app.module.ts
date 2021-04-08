@@ -8,6 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {IonicStorageModule} from '@ionic/storage';
 import {AngularFireModule} from '@angular/fire';
+import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
+import { File } from "@ionic-native/file/ngx";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBg4HHfh3xGmgvrR2R3E3s978GDD9yd3G8",
@@ -23,7 +25,7 @@ const firebaseConfig = {
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AngularFireModule.initializeApp(firebaseConfig), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },Camera,File],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

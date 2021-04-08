@@ -15,7 +15,8 @@ import { connectableObservableDescriptor } from 'rxjs/internal/observable/Connec
 })
 export class Tab2Page implements OnInit, AfterViewInit{
 
-  private order: Observable<Order[]>;
+ // private order: Observable<Order[]>;
+  order=null;
 
   // order: Order = {
   //   id: '',
@@ -30,12 +31,16 @@ export class Tab2Page implements OnInit, AfterViewInit{
   // text='';
   
   //orders=[];
- // orderimg = 'https://i.pinimg.com/564x/c1/73/98/c17398f6af7af7cfe942a8b549eed534.jpg';
+  orderimg = 'https://i.pinimg.com/originals/62/86/68/6286683aab458fb44bc2e156cb16e60a.png'; 
+   
   //login: any = { username: '', password: '',fname:'',lname:'' };
   
   isAdmin=false;
   constructor(private router: Router,public itemService: ItemService,private activatedRoute: ActivatedRoute) {
-    //this.order = this.itemService.getOrder();
+    this.order = this.itemService.getOrder();
+    //this.itemService.load_my_orders();
+    //console.log(this.order.);
+    
   }
 
   ngOnInit(): void{
@@ -44,7 +49,9 @@ export class Tab2Page implements OnInit, AfterViewInit{
     // console.log("Current User: ");
 		// console.log(user1.uid);
     // console.log("tab2 oninit");
-    this.order=this.itemService.getOrder();
+    //orderimg = this.order.url;
+    //this.order=this.itemService.getOrder();
+    this.itemService.load_my_orders();
     
   }
 
@@ -55,16 +62,18 @@ export class Tab2Page implements OnInit, AfterViewInit{
     //     this.order = orderData;
     //   });
     // }
-    this.itemService.load_my_orders();
+    //this.itemService.load_my_orders();
   }
   
-  // clickme(){
-  // 	console.log(this.login.fname)
-  // 	console.log(this.login.lname)
-  // }
 
   viewOrder(order){
     this.router.navigate(["/order-detail-page",order]);
+  }
+
+  checkout(){
+    console.log("Checking out");
+    this.itemService.createCart(this.order,this.order.quantity);
+    this.router.navigate(["/order"]);
   }
 
 }

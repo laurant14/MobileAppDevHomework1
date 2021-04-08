@@ -3,7 +3,6 @@ import {Platform} from '@ionic/angular';
 
 import {AngularFireModule} from '@angular/fire';
 import {AngularFirestore} from '@angular/fire/firestore';
-import { timeStamp } from 'console';
 
 @Component({
   selector: 'app-root',

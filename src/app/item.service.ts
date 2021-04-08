@@ -2,17 +2,19 @@ import { Injectable } from '@angular/core';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFirestore, AngularFirestoreCollection, DocumentReference} from '@angular/fire/firestore';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import {IonicStorageModule} from '@ionic/storage';
-import {Storage} from '@ionic/storage';
+// import { AppRoutingModule } from './app-routing.module';
+// import { AppComponent } from './app.component';
+// import {IonicStorageModule} from '@ionic/storage';
+// import {Storage} from '@ionic/storage';
 import {Menu} from 'Menu';
 import {Order} from 'Menu';
 import {Observable} from 'rxjs';
 import {map,take} from 'rxjs/operators';
 import {AngularFireAuth} from '@angular/fire/auth';
 import firebase from 'firebase/app';
+import {Cart} from 'Menu';
 import { mainModule } from 'process';
+//import { url } from 'inspector';
 
 
 @Injectable({
@@ -24,6 +26,9 @@ export class ItemService {
 
   private order: Observable<Order[]>;
   private orderCollection: AngularFirestoreCollection<Order>;
+
+  private cart: Observable<Cart[]>;
+  private cartCollection: AngularFirestoreCollection<Cart>;
 
   usertype="";
   uid='';
@@ -43,12 +48,27 @@ orderList=[
 
   constructor(private firebase: AngularFirestore,
     public angularFire: AngularFireAuth) {
+      this.cartCollection=this.firebase.collection<Cart>('cart');
       this.orderCollection=this.firebase.collection<Order>('orders');
     this.menuCollection=this.firebase.collection<Menu>('menus');
     this.menu=this.menuCollection.snapshotChanges().pipe(
       map(actions=>{
         return actions.map(a=>{
           const data=a.payload.doc.data();
+          console.log("menu data...");
+          console.log(data);
+          const id=a.payload.doc.id;
+          return {id, ...data};
+        });
+      })
+    );
+    
+    
+    this.order=this.orderCollection.snapshotChanges().pipe(
+      map(actions=>{
+        return actions.map(a=>{
+          const data=a.payload.doc.data();
+          console.log("Order Data...");
           console.log(data);
           const id=a.payload.doc.id;
           return {id, ...data};
@@ -56,11 +76,11 @@ orderList=[
       })
     );
 
-    this.order=this.orderCollection.snapshotChanges().pipe(
+    this.cart=this.cartCollection.snapshotChanges().pipe(
       map(actions=>{
         return actions.map(a=>{
           const data=a.payload.doc.data();
-          console.log("Data...");
+          console.log("cart data...");
           console.log(data);
           const id=a.payload.doc.id;
           return {id, ...data};
@@ -69,45 +89,45 @@ orderList=[
     );
    }
 
-  //  load_my_orders(){
-  //    var user=firebase.auth().currentUser;
-  //    console.log(user.id);
-  //    var id=user.id;
-  //    this.orderCollection=this.firebase.collection<Order>('orders',ref=>ref.where('id', '==',id));
-  //    this.order=this.orderCollection.snapshotChanges().pipe(
-  //      map(actions=>{
-  //        return actions.map(a=>{
-  //          const data=a.payload.doc.data();
-  //          const id=a.payload.doc.id;
-  //          console.log(id)
-  //          return {id,...data};
-  //        });
-  //      })
-  //    );
-  //    console.log("orders loaded...");
-  //  }
+   load_my_orders(){
+     var user=firebase.auth().currentUser;
+     console.log(user.uid);
+     var uid=user.uid;
+     this.orderCollection=this.firebase.collection<Order>('orders',ref=>ref.where('id', '==',uid));
+     this.order=this.orderCollection.snapshotChanges().pipe(
+       map(actions=>{
+         return actions.map(a=>{
+           const data=a.payload.doc.data();
+           const id=a.payload.doc.id;
+           console.log(id)
+           return {id,...data};
+         });
+       })
+     );
+     console.log("orders loaded...");
+   }
 
-  load_my_orders(){ //after user login, call this function
-    var user = firebase.auth().currentUser;
-    console.log(user.uid);
-    var uid=user.uid;
-    // this.noteCollection = this.afs.collection<Note>('notes');
-    this.orderCollection = this.firebase.collection<Order>('orders',ref => ref.where('uid', '==', uid));
+  // load_my_orders(){ //after user login, call this function
+  //   var user = firebase.auth().currentUser;
+  //   console.log(user.uid);
+  //   var uid=user.uid;
+  //   // this.noteCollection = this.afs.collection<Note>('notes');
+  //   this.orderCollection = this.firebase.collection<Order>('orders',ref => ref.where('uid', '==', uid));
 
-    this.order = this.orderCollection.snapshotChanges().pipe(
-        map(actions => {
-          return actions.map(a => {
-            const data = a.payload.doc.data();
-            // console.log(data)
-            const id = a.payload.doc.id;
-            console.log(id)
-            // console.log("run after aadding new node? ")
-            return { id, ...data };
-          });
-        })
-    );
-    console.log("orders  loaded...")
-  }
+  //   this.order = this.orderCollection.snapshotChanges().pipe(
+  //       map(actions => {
+  //         return actions.map(a => {
+  //           const data = a.payload.doc.data();
+  //           // console.log(data)
+  //           const id = a.payload.doc.id;
+  //           console.log(id)
+  //           // console.log("run after aadding new node? ")
+  //           return { id, ...data };
+  //         });
+  //       })
+  //   );
+  //   console.log("orders  loaded...")
+  // }
 
   setUID(uid){
     this.uid=uid;
@@ -146,6 +166,28 @@ orderList=[
   // getOrderList(){
   //   return this.orderList;
   // }
+  createCart(item, quantity){
+    var d=new Date();
+    var db=this.firebase;
+    var user = firebase.auth().currentUser;
+    console.log(user.uid);
+    var uid=user.uid;
+    db.collection("cart").add({
+      uid:uid,
+      quantity: quantity,
+      date: d.toLocaleDateString(),
+      amount:quantity*item.price,
+      
+      //userid: this.angularFire.currentUser.uid,
+    })
+    .then((docRef)=>{
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch((error)=>{
+      console.error("Error adding document: ", error);
+  });
+}
+
 
   createOrder(item, quantityY){
     //this.orderList.push({item, quantity});
@@ -185,6 +227,10 @@ orderList=[
 
 getOrder(): Observable<Order[]>{
   return this.order;
+}
+
+getCart():Observable<Cart[]>{
+  return this.cart;
 }
 
 getMenus(): Observable<Menu[]>{
